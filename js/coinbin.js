@@ -605,7 +605,9 @@ $(document).ready(function() {
 					estimatedTxSize += 147
 				}
 
-				tx.addinput($(".txId",o).val(), $(".txIdN",o).val(), $(".txIdScript",o).val(), seq);
+				var value = parseInt($(".txIdAmount", o).val() * 1e8);
++				tx.addinput($(".txId",o).val(), $(".txIdN",o).val(), $(".txIdScript",o).val(), seq, value);
+
 			} else {
 				$('#putTabs a[href="#txinputs"]').attr('style','color:#a94442;');
 			}
@@ -635,7 +637,11 @@ $(document).ready(function() {
 
 
 		if(!$("#recipients .row, #inputs .row").hasClass('has-error')){
-			$("#transactionCreate textarea").val(tx.serialize());
+
+			var txhex = tx.serialize();
+			var txinputs = JSON.stringify(tx.coreInputObject());
+			$("#transactionCreate textarea.transactionHex").val(txhex);
+			$("#transactionCreate textarea.transactionInputs").val(txinputs);
 			$("#transactionCreate .txSize").html(tx.size());
 
 			$("#transactionCreate").removeClass("hidden");
@@ -648,6 +654,14 @@ $(document).ready(function() {
 		} else {
 			$("#transactionCreateStatus").removeClass("hidden").html("One or more input or output is invalid").fadeOut().fadeIn();
 		}
+	});
+
+	$("#transactionToSignBtn").click(function(){
+		var txhex = $("#transactionCreate textarea.transactionHex").val();
+		var txinputs = $("#transactionCreate textarea.transactionInputs").val();
+		$("#signTransaction").val(txhex);
+		$("#signTransactionInputs").val(txinputs);
+		window.location.hash = "#sign";
 	});
 
 	$(".txidClear").click(function(){
