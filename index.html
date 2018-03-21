@@ -723,9 +723,11 @@
 
 							<p>The transaction below has been generated and encoded. It can be broadcasted once it has been signed.</p>
 							<br>
-			                                <textarea class="form-control" style="height:150px" readonly></textarea>
+			                                <textarea class="transactionHex form-control" style="height:150px" readonly></textarea>
 
 							<p class="text-muted">Size: <span class="txSize">0</span> <i>bytes</i></p>
+							<textarea class="transactionInputs form-control hidden" readonly></textarea>
++							<input type="button" value="Sign" class="btn" id="transactionToSignBtn">
 						</div>
 
 						<input type="button" value="Submit" class="btn btn-primary" id="transactionBtn">
@@ -994,6 +996,13 @@
 						</div>
 						<br>
 
+						<div class="row">
+							<div class="col-md-12">
+								<textarea type="text" id="signTransactionInputs" class="form-control" style="height:125px"></textarea>
+							</div>
+						</div>
+						<br>
+
 						<a href="javascript:;" id="signAdvancedCollapse">
 							<div class="well well-sm"><span class="glyphicon glyphicon-collapse-down"></span> Advanced Options</div>
 						</a>
@@ -1009,14 +1018,7 @@
 										<option value="3" rel="SIGHASH_SINGLE: The only output signed is the one corresponding to this input, ensuring nobody can change your part of the transaction but allowing other signers to change their part of the transaction.">SINGLE</option>
 										<option value="129" rel="SIGHASH_ALL|SIGHASH_ANYONECANPAY: Signs all of the outputs but only this one input, it allows anyone to add or remove other inputs, so anyone can contribute additional satoshis but they cannot change how many satoshis are sent nor where they go.">ALL|ANYONECANPAY</option>
 										<option value="130" rel="SIGHASH_NONE|SIGHASH_ANYONECANPAY: Signs only this one input and allows anyone to add or remove other inputs or outputs, so anyone who gets a copy of this input can spend it however they'd like.">NONE|ANYONECANPAY</option>
-										<option value="131" rel="SIGHASH_SINGLE|SIGHASH_ANYONECANPAY: Signs this one input and its corresponding output. Allows anyone to add or remove other inputs.">SINGLE|ANYONECANPAY</option>
-										<option value="65"  rel="SIGHASH_ALL|SIGHASH_FORKID: Signs all the inputs and outputs, protecting everything against modification.">ALL (default)</option>
-										<option value="66"  rel="SIGHASH_NONE|SIGHASH_FORKID: Signs all of the inputs but none of the outputs, allowing anyone to change where the satoshis are going unless other signatures using other signature hash flags protect the outputs.">NONE</option>
-										<option value="67"  rel="SIGHASH_SINGLE|SIGHASH_FORKID: The only output signed is the one corresponding to this input, ensuring nobody can change your part of the transaction but allowing other signers to change their part of the transaction.">SINGLE</option>
-										<option value="193" rel="SIGHASH_ALL||SIGHASH_FORKID|SIGHASH_ANYONECANPAY: Signs all of the outputs but only this one input, it allows anyone to add or remove other inputs, so anyone can contribute additional satoshis but they cannot change how many satoshis are sent nor where they go.">ALL|ANYONECANPAY</option>
-										<option value="194" rel="SIGHASH_NONE|SIGHASH_FORKID|SIGHASH_ANYONECANPAY: Signs only this one input and allows anyone to add or remove other inputs or outputs, so anyone who gets a copy of this input can spend it however they'd like.">NONE|ANYONECANPAY</option>
-										<option value="195" rel="SIGHASH_SINGLE|SIGHASH_FORKID|SIGHASH_ANYONECANPAY: Signs this one input and its corresponding output. Allows anyone to add or remove other inputs.">SINGLE|ANYONECANPAY</option>
-		
+												
 									</select>
 								</div>
 							</div>

@@ -2,9 +2,9 @@ $(document).ready(function() {
 
 	/* open wallet code */
 
-	var explorer_tx = "https://coinb.in/tx/"
-	var explorer_addr = "https://coinb.in/addr/"
-	var explorer_block = "https://coinb.in/block/"
+	var explorer_tx = "https://explorer.bitcoingold.org/insight/tx/"
+	var explorer_addr = "https://explorer.bitcoingold.org/insight/address/"
+	var explorer_block = "https://explorer.bitcoingold.org/insight/block/"
 
 	var wallet_timer = false;
 
@@ -912,14 +912,15 @@ $(document).ready(function() {
 			if(redeem.addr) {
 				$("#redeemFromAddress").removeClass('hidden').html('<span class="glyphicon glyphicon-info-sign"></span> Retrieved unspent inputs from address <a href="'+explorer_addr+redeem.addr+'" target="_blank">'+redeem.addr+'</a>');
 
-				$.each($(data).find("unspent").children(), function(i,o){
-					var tx = $(o).find("tx_hash").text();
-					var n = $(o).find("tx_output_n").text();
-					var script = (redeem.isMultisig==true) ? $("#redeemFrom").val() : $(o).find("script").text();
-					var amount = (($(o).find("value").text()*1)/100000000).toFixed(8);
-
+				var dataJson = JSON.parse(data);
+				dataJson.map(function(key){
+					var tx = key.txid;
+					var n  = key.vout; 
+					var script = key.scriptPubKey;
+					var amount = key.amount;
 					addOutput(tx, n, script, amount);
 				});
+
 			}
 
 			$("#redeemFromBtn").html("Load").attr('disabled',false);

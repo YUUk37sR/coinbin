@@ -16,18 +16,17 @@
 	coinjs.hdkey = {'prv':0x0488ade4, 'pub':0x0488b21e};
 	coinjs.useFORKID = true;
 	coinjs.SIGHASH_FORKID = 0x40;
-	coinjs.FORKID_BTG = 79; 
+	coinjs.FORKID_BTG = 0x79; 
 
 
 	coinjs.compressed = false;
 
 	/* other vars */
-	coinjs.developer = '1CWHWkTWaq1K5hevimJia3cyinQsrgXUvg'; // bitcoin
+	coinjs.developer = 'GQTU6NY7JUuKzGAgHT967i3yVU1dEGpYvU'; // bitcoin gold
 
-	/* bit(coinb.in) api vars */
-	coinjs.host = ('https:'==document.location.protocol?'https://':'http://')+'coinb.in/api/';
-	coinjs.uid = '1';
-	coinjs.key = '12345678901234567890123456789012';
+	/* Bitcoin Gold Explorer */
+	coinjs.host = 'https://explorer.bitcoingold.org/insight-api/';
+
 
 	/* start of address functions */
 
@@ -798,7 +797,7 @@
 	coinjs.transaction = function() {
 
 		var r = {};
-		r.version = 1;
+		r.version = 2;
 		r.lock_time = 0;
 		r.ins = [];
 		r.outs = [];
@@ -884,7 +883,7 @@
 
 		/* list unspent transactions */
 		r.listUnspent = function(address, callback) {
-			coinjs.ajax(coinjs.host+'?uid='+coinjs.uid+'&key='+coinjs.key+'&setmodule=addresses&request=unspent&address='+address+'&r='+Math.random(), callback, "GET");
+			coinjs.ajax(coinjs.host+'/addrs/'+address+'/utxo', callback, "GET");
 		}
 
 		/* add unspent to transaction */
@@ -1037,7 +1036,7 @@
 
 			// start redeem script check
 			var extract = this.extractScriptKey(index);
-			if(!coinjs.useForkId && extract['type'] != 'segwit'){
+			if(!coinjs.useFORKID && extract['type'] != 'segwit'){
 				return {'result':0, 'fail':'txtype', 'response':'sighash-witnessv0 is only for sigwit when forkid is not enabled'};
 			}
 
@@ -1059,11 +1058,6 @@
 				return {'result':0, 'fail':'value', 'response':'unable to generate a valid segwit hash without a value'};				
 			}
 
-			// end of redeem script check
-
-			scriptcode = scriptcode.slice(1);
-			scriptcode.unshift(25, 118, 169);
-			scriptcode.push(136, 172);
 
 			var value = coinjs.numToBytes(extract['value'], 8);
 
