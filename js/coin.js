@@ -16,7 +16,7 @@
 	coinjs.hdkey = {'prv':0x0488ade4, 'pub':0x0488b21e};
 	coinjs.useFORKID = true;
 	coinjs.SIGHASH_FORKID = 0x40;
-	coinjs.FORKID_BTG = 0x79; 
+	coinjs.FORKID_BTG = 79; 
 
 
 	coinjs.compressed = false;
@@ -1568,7 +1568,9 @@
 				}
 			}
 
- 			obj.lock_time = readAsInt(4);
+			 obj.lock_time = readAsInt(4);
+			 obj.value = readAsInt(4);
+
 			return obj;
 		}
 

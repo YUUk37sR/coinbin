@@ -92,8 +92,8 @@
 						</div>
 
 						<div class="jumbotron">
-							<h1>Bitcoin. It's your money!</h1>
-							<p>Be your own bank, take control of your own money and start using Bitcoin today!</p>
+							<h1>Bitcoin Gold. It's your money!</h1>
+							<p>Be your own bank, take control of your own money and start using Bitcoin Gold today!</p>
 							<p><a class="btn btn-primary btn-lg" href="#about" role="button">Learn more &raquo;</a></p>
 						</div>
 
@@ -137,7 +137,7 @@
 					<div class="tab-pane tab-content" id="wallet">
 						<div class="row">
 							<div class="col-md-12">
-								<h2>Open Wallet <small> browser based bitcoin wallet</small></h2>
+								<h2>Open Wallet <small> browser based bitcoin gold wallet</small></h2>
 								<div id="openLogin">
 									<form class="form-signin" role="form" action="javascript:;">
 
@@ -187,7 +187,7 @@
 											<br>
 											<div style="text-align:center; width:350px;">
 												<ul class="nav nav-pills" role="tablist">
-													<li role="presentation" class="active"><a href="javascript:;" id="walletBalance">0.00 BTC</a></li>
+													<li role="presentation" class="active"><a href="javascript:;" id="walletBalance">0.00 BTG</a></li>
 													<li role="presentation"><a href="javascript:;" id="walletShowSpend">Spend</a></li>
 													<li role="presentation"><a id="walletHistory" href="javascript:;" target="_blank">History</a></li>
 													<li role="presentation"><a href="https://localbitcoins.com/?ch=173j" target="_blank">Buy</a></li>
@@ -250,7 +250,7 @@
 															<input type="text" class="form-control" value="0.0004" id="txFee">
 														</div>
 														<div class="col-xs-5">
-															<label><abbr title="the amount to donate to coinb.in">Donation</abbr></label>
+															<label><abbr title="the amount to donate">Donation</abbr></label>
 															<input type="text" class="form-control" value="0.003" id="developerDonation">
 														</div>
 													</div>
@@ -271,7 +271,7 @@
 
 					<div class="tab-pane tab-content" id="newAddress">
 						<h2>New Address <small>create a new address</small></h2>
-						<p>Any keys used you will need to manually store safely as they will be needed later to redeem the bitcoins.</p>
+						<p>Any keys used you will need to manually store safely as they will be needed later to redeem the bitcoingold.</p>
 						<label>Address (Share)</label>
 
 						<div class="input-group">
@@ -333,7 +333,7 @@
 					<div class="tab-pane tab-content" id="newSegWit">
 						<h2>New SegWit Address <small> Smaller &amp; Faster Transactions</small></h2>
 
-						<p>Any keys used you will need to manually store safely as they will be needed later to redeem the bitcoins.</p>
+						<p>Any keys used you will need to manually store safely as they will be needed later to redeem the bitcoingolds.</p>
 
 						<label>SegWit Address (Share)</label>
 
@@ -377,14 +377,14 @@
 						<div class="row">
 
 							<div class="col-md-8">
-								<p>Public keys can be <a href="#newAddress">generated in your browser</a> or from your bitcoin client</a>.</p>
+								<p>Public keys can be <a href="#newAddress">generated in your browser</a> or from your bitcoingold client</a>.</p>
 								<p>Enter the public keys of all the participants, to create a <a href="https://en.bitcoin.it/wiki/Address#Multi-signature_addresses" target="_blank">multi signature address</a>. Maximum of 15 allowed. Compressed and uncompressed public keys are accepted.</p>
 							</div>
 
-							<div class="col-md-3">
+						<!--	<div class="col-md-3">
 								<p class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> <a href="javascript:;" data-toggle="modal" data-target="#modalMediator"><abbr>Need a Mediator?</abbr></a></p>
 							</div>
-
+						-->																																																																																																			 
 							<div class="col-md-1">
 							</div>
 						</div>
@@ -723,7 +723,7 @@
 
 							<p>The transaction below has been generated and encoded. It can be broadcasted once it has been signed.</p>
 							<br>
-			                                <textarea class="transactionHex form-control" style="height:150px" readonly></textarea>
+			                <textarea class="transactionHex form-control" style="height:150px" readonly></textarea>
 
 							<p class="text-muted">Size: <span class="txSize">0</span> <i>bytes</i></p>
 							<textarea class="transactionInputs form-control hidden" readonly></textarea>
@@ -1049,7 +1049,7 @@
 					</div>
 
 					<div class="tab-pane tab-content" id="broadcast">
-						<h2>Broadcast Transaction <small>into the bitcoin network</small></h2>
+						<h2>Broadcast Transaction <small>into the bitcoingold network</small></h2>
 						<a href="#settings" style="float:right;"><span class="glyphicon glyphicon-cog"></span></a>
 						<p>Enter your hex encoded bitcoin transaction</p>
 						<textarea class="form-control" style="height:125px" id="rawTransaction"></textarea>
@@ -1069,8 +1069,8 @@
 					<div class="tab-pane tab-content" id="about">
 						<h2>About <small>open source bitcoin gold wallet</small></h2>
 						<p>Version 1.3</p>
-						<p>Compatible with bitcoin-qt</p>
-						<p>Github <a href="https://github.com/YUUk37sR/coinbin/">https://github.com/OutCast3k/coinbin/</a></p>
+						<p>Compatible with bitcoingold-qt</p>
+						<p>Github <a href="https://github.com/YUUk37sR/coinbin/">https://github.com/YUUk37sR/coinbin/</a></p>
 					</div>
 
 					<div class="tab-pane tab-content" id="settings">
@@ -1082,7 +1082,7 @@
 								<b>Network</b>: <br>
 								<p class="text-muted">Select which network you'd like to use for key pair generation.</p>
 								<select class="form-control" id="coinjs_coin">
-									<option value="bitcoin_mainnet" rel="0x26;0x80;0x17;0x488b21e;0x488ade4;coinb.in;coinb.in">Bitcoin (mainnet)</option>
+									<option value="bitcoingold_mainnet" rel="0x26;0x80;0x17;0x488b21e;0x488ade4;coinb.in;coinb.in">BitcoinGold (mainnet)</option>
 
 									<option value="custom" rel="0x26;0x80;0x17;0x488b21e;0x488ade4;false;false">Custom</option>
 								</select>
@@ -1135,7 +1135,7 @@
 								<b>Broadcast</b>: <br>
 								<p class="text-muted">Select the network you wish to broadcast the transaction via</p>
 								<select class="form-control" id="coinjs_broadcast">
-									<option value="coinb.in">coinb.in (Bitcoin mainnet)</option>
+									<option value="bitcoingold.org">BitcoinGold mainnet</option>
 								</select>
 							</div>
 						</div>
@@ -1147,7 +1147,7 @@
 								<b>Unspent outputs</b>: <br>
 								<p class="text-muted">Select the network you wish to retreive your unspent inputs from</p>
 								<select class="form-control" id="coinjs_utxo">
-									<option value="coinb.in">coinb.in (Bitcoin mainnet)</option>
+									<option value="bitcoingold.org">BitcoinGold mainnet</option>
 								</select>
 							</div>
 						</div>
@@ -1162,7 +1162,7 @@
 					</div>
 
 					<br>
-					<p class="text-muted">This page uses javascript to generate your addresses and sign your transactions within your browser, this means we <i>never</i> receive your private keys, this can be independently verified by reviewing the source code on <a href="https://github.com/OutCast3k/coinbin/" target="_blank">github</a>. You can even <a href="https://github.com/OutCast3k/coinbin/archive/master.zip">download</a> this page and host it yourself or run it offline!</p>
+					<p class="text-muted">This page uses javascript to generate your addresses and sign your transactions within your browser, this means we <i>never</i> receive your private keys, this can be independently verified by reviewing the source code on <a href="https://github.com/YUUk37sR/coinbin/" target="_blank">github</a>. You can even <a href="https://github.com/YUUk37sR/coinbin/archive/master.zip">download</a> this page and host it yourself or run it offline!</p>
 					<br>
 
 				</div>
@@ -1186,7 +1186,7 @@
 				</div>
 
 				<div class="modal-body">
-					<p>You are about to send a transaction to the value of <span id="spendAmount">0.00</span> BTC</p>
+					<p>You are about to send a transaction to the value of <span id="spendAmount">0.00</span> BTG</p>
 
 					<br>
 					<div id="walletSendConfirmStatus" class="alert alert-danger hidden"></div>
@@ -1252,7 +1252,7 @@
 	</div>
 	<!-- qrcode scanner modal -->
 
-	<!-- mediator modal -->
+	<!-- mediator modal --> 
 	<div class="modal fade" id="modalMediator" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -1269,14 +1269,14 @@
 						<div class="col-md-5">
 							<label>Mediator:</label>
 
-							<!-- 
+						<!-- 
 								You need to contact us before adding your pubkey 
 								and submitting a pull request on github. 
 
 								format is: pubkey;email;fee
 							-->
 
-							<select id="mediatorList" class="form-control">
+						<select id="mediatorList" class="form-control">
 								<option value="02b6231cc602740c29436eafbb6448880f4058cc3d2745c709deee313104678277;support@coinb.in;1">Coinb.in</option>
 							</select>
 						</div>
@@ -1305,7 +1305,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> 
 	<!-- mediator modal -->
 
 
