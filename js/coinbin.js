@@ -2,9 +2,9 @@ $(document).ready(function() {
 
 	/* open wallet code */
 
-	var explorer_tx = "https://coinb.in/tx/"
-	var explorer_addr = "https://coinb.in/addr/"
-	var explorer_block = "https://coinb.in/block/"
+	var explorer_tx = "https://explorer.bitcoingold.org/insight/tx/"
+	var explorer_addr = "https://explorer.bitcoingold.org/insight/address/"
+	var explorer_block = "https://explorer.bitcoingold.org/insight/block/"
 
 	var wallet_timer = false;
 
@@ -605,7 +605,9 @@ $(document).ready(function() {
 					estimatedTxSize += 147
 				}
 
-				tx.addinput($(".txId",o).val(), $(".txIdN",o).val(), $(".txIdScript",o).val(), seq);
+				var value = parseInt($(".txIdAmount", o).val() * 1e8);
++				tx.addinput($(".txId",o).val(), $(".txIdN",o).val(), $(".txIdScript",o).val(), seq, value);
+
 			} else {
 				$('#putTabs a[href="#txinputs"]').attr('style','color:#a94442;');
 			}
@@ -635,7 +637,11 @@ $(document).ready(function() {
 
 
 		if(!$("#recipients .row, #inputs .row").hasClass('has-error')){
-			$("#transactionCreate textarea").val(tx.serialize());
+
+			var txhex = tx.serialize();
+			var txinputs = JSON.stringify(tx.coreInputObject());
+			$("#transactionCreate textarea.transactionHex").val(txhex);
+			$("#transactionCreate textarea.transactionInputs").val(txinputs);
 			$("#transactionCreate .txSize").html(tx.size());
 
 			$("#transactionCreate").removeClass("hidden");
@@ -648,6 +654,14 @@ $(document).ready(function() {
 		} else {
 			$("#transactionCreateStatus").removeClass("hidden").html("One or more input or output is invalid").fadeOut().fadeIn();
 		}
+	});
+
+	$("#transactionToSignBtn").click(function(){
+		var txhex = $("#transactionCreate textarea.transactionHex").val();
+		var txinputs = $("#transactionCreate textarea.transactionInputs").val();
+		$("#signTransaction").val(txhex);
+		$("#signTransactionInputs").val(txinputs);
+		window.location.hash = "#sign";
 	});
 
 	$(".txidClear").click(function(){
@@ -873,8 +887,8 @@ $(document).ready(function() {
 
 			$("#inputs .row:last input").attr('disabled',true);
 
-			var txid = ((tx).match(/.{1,2}/g).reverse()).join("")+'';
-
+//			var txid = ((tx).match(/.{1,2}/g).reverse()).join("")+'';
+			var txid = tx;
 			$("#inputs .txId:last").val(txid);
 			$("#inputs .txIdN:last").val(n);
 			$("#inputs .txIdAmount:last").val(amount);
@@ -898,14 +912,15 @@ $(document).ready(function() {
 			if(redeem.addr) {
 				$("#redeemFromAddress").removeClass('hidden').html('<span class="glyphicon glyphicon-info-sign"></span> Retrieved unspent inputs from address <a href="'+explorer_addr+redeem.addr+'" target="_blank">'+redeem.addr+'</a>');
 
-				$.each($(data).find("unspent").children(), function(i,o){
-					var tx = $(o).find("tx_hash").text();
-					var n = $(o).find("tx_output_n").text();
-					var script = (redeem.isMultisig==true) ? $("#redeemFrom").val() : $(o).find("script").text();
-					var amount = (($(o).find("value").text()*1)/100000000).toFixed(8);
-
+				var dataJson = JSON.parse(data);
+				dataJson.map(function(key){
+					var tx = key.txid;
+					var n  = key.vout; 
+					var script = key.scriptPubKey;
+					var amount = key.amount;
 					addOutput(tx, n, script, amount);
 				});
+
 			}
 
 			$("#redeemFromBtn").html("Load").attr('disabled',false);
@@ -1074,19 +1089,20 @@ $(document).ready(function() {
 		rawSubmitDefault(this);
 	});
 
-	// broadcast transaction vai coinbin (default)
+	// broadcast transaction vai bitcoingold.org (default)
 	function rawSubmitDefault(btn){ 
 		var thisbtn = btn;		
 		$(thisbtn).val('Please wait, loading...').attr('disabled',true);
+		var rawTrx = JSON.parse('{"rawtx":"' + $("#rawTransaction").val() + '"}');
 		$.ajax ({
 			type: "POST",
-			url: coinjs.host+'?uid='+coinjs.uid+'&key='+coinjs.key+'&setmodule=bitcoin&request=sendrawtransaction',
-			data: {'rawtx':$("#rawTransaction").val()},
-			dataType: "xml",
+			//url: coinjs.host +'tx/send',
+			url: coinjs.host + 'tx/send' ,
+			data: {'rawtx': $("#rawTransaction").val() },
 			error: function(data) {
 				$("#rawTransactionStatus").addClass('alert-danger').removeClass('alert-success').removeClass("hidden").html(" There was an error submitting your request, please try again").prepend('<span class="glyphicon glyphicon-exclamation-sign"></span>');
 			},
-                        success: function(data) {
+			success: function(data) {
 				$("#rawTransactionStatus").html(unescape($(data).find("response").text()).replace(/\+/g,' ')).removeClass('hidden');
 				if($(data).find("result").text()==1){
 					$("#rawTransactionStatus").addClass('alert-success').removeClass('alert-danger');
@@ -1472,7 +1488,7 @@ $(document).ready(function() {
 	$("#signBtn").click(function(){
 		var wifkey = $("#signPrivateKey");
 		var script = $("#signTransaction");
-
+		var txInputs = JSON.parse($("#signTransactionInputs").val());
 		if(coinjs.addressDecode(wifkey.val())){
 			$(wifkey).parent().removeClass('has-error');
 		} else {
@@ -1490,7 +1506,10 @@ $(document).ready(function() {
 			try {
 				var tx = coinjs.transaction();
 				var t = tx.deserialize(script.val());
-
+				for (var i = 0; i < t.ins.length; i++) {
+					t.ins[i].value = txInputs[i].amount;
+				}	
+				
 				var signed = t.sign(wifkey.val(), $("#sighashType option:selected").val());
 				$("#signedData textarea").val(signed);
 				$("#signedData .txSize").html(t.size());
@@ -1564,7 +1583,7 @@ $(document).ready(function() {
 			}
 		} else {
 			var qrcode = new QRCode("qrcode");
-			qrstr = "bitcoin:"+$('.address',thisbtn).val();
+			qrstr = "bitcoingold:"+$('.address',thisbtn).val();
 		}
 
 		if(qrstr){
@@ -1659,7 +1678,7 @@ $(document).ready(function() {
 		// deal with broadcasting settings
 		if(o[5]=="false"){
 			$("#coinjs_broadcast, #rawTransaction, #rawSubmitBtn, #openBtn").attr('disabled',true);
-			$("#coinjs_broadcast").val("coinb.in");			
+			$("#coinjs_broadcast").val("bitcoingold.org");			
 		} else {
 			$("#coinjs_broadcast").val(o[5]);
 			$("#coinjs_broadcast, #rawTransaction, #rawSubmitBtn, #openBtn").attr('disabled',false);
@@ -1668,7 +1687,7 @@ $(document).ready(function() {
 		// deal with unspent output settings
 		if(o[6]=="false"){
 			$("#coinjs_utxo, #redeemFrom, #redeemFromBtn, #openBtn, .qrcodeScanner").attr('disabled',true);			
-			$("#coinjs_utxo").val("coinb.in");
+			$("#coinjs_utxo").val("bitcoingold.org");
 		} else {
 			$("#coinjs_utxo").val(o[6]);
 			$("#coinjs_utxo, #redeemFrom, #redeemFromBtn, #openBtn, .qrcodeScanner").attr('disabled',false);
