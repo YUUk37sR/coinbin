@@ -796,6 +796,8 @@ $(document).ready(function() {
 			listUnspentChainso_Dogecoin(redeem);
 		} else if(host=='cryptoid.info_carboncoin'){
 			listUnspentCryptoidinfo_Carboncoin(redeem);
+		} else if(host=='bitcoingold.testnet'){
+			listUnspentBitcoingold_testnet(redeem);
 		} else {
 			listUnspentDefault(redeem);
 		}
@@ -927,6 +929,37 @@ $(document).ready(function() {
 			totalInputAmount();
 
 			mediatorPayment(redeem);
+		});
+	}
+
+	/* retrieve unspent data from testnet for bitcoingold */
+	function listUnspentBitcoingold_testnet(redeem){
+		$.ajax ({
+			type: "GET",
+			url: "https://test-explorer.bitcoingold.org/insight-api/addrs/"+redeem.addr+"/utxo",
+			dataType: "json",
+			error: function(data) {
+				$("#redeemFromStatus").removeClass('hidden').html('<span class="glyphicon glyphicon-exclamation-sign"></span> Unexpected error, unable to retrieve unspent outputs!');
+			},
+			success: function(data) {
+				if((data.status && data.data) && data.status=='success'){
+					$("#redeemFromAddress").removeClass('hidden').html('<span class="glyphicon glyphicon-info-sign"></span> Retrieved unspent inputs from address <a href="'+explorer_addr+redeem.addr+'" target="_blank">'+redeem.addr+'</a>');
+					var dataJson = JSON.parse(data);
+					dataJson.map(function(key){
+						var tx = key.txid;
+						var n  = key.vout; 
+						var script = key.scriptPubKey;
+						var amount = key.amount;
+						addOutput(tx, n, script, amount);
+					});
+				} else {
+					$("#redeemFromStatus").removeClass('hidden').html('<span class="glyphicon glyphicon-exclamation-sign"></span> Unexpected error, unable to retrieve unspent outputs.');
+				}
+			},
+			complete: function(data, status) {
+				$("#redeemFromBtn").html("Load").attr('disabled',false);
+				totalInputAmount();
+			}
 		});
 	}
 
@@ -1117,6 +1150,34 @@ $(document).ready(function() {
 			}
 		});
 	}
+
+	// broadcast transaction via bitcoingold testnet
+	function rawSubmitBitcoingold_testnet(thisbtn) {
+		$(thisbtn).val('Please wait, loading...').attr('disabled',true);
+		var rawTrx = JSON.parse('{"rawtx":"' + $("#rawTransaction").val() + '"}');
+		$.ajax ({
+			type: "POST",
+			url: 'https://test-explorer.bitcoingold.org/insight-api/tx/send' ,
+			data: {'rawtx': $("#rawTransaction").val() },
+			error: function(data) {
+				$("#rawTransactionStatus").addClass('alert-danger').removeClass('alert-success').removeClass("hidden").html(" There was an error submitting your request, please try again").prepend('<span class="glyphicon glyphicon-exclamation-sign"></span>');
+			},
+			success: function(data) {
+				$("#rawTransactionStatus").html(unescape($(data).find("response").text()).replace(/\+/g,' ')).removeClass('hidden');
+				if($(data).find("result").text()==1){
+					$("#rawTransactionStatus").addClass('alert-success').removeClass('alert-danger');
+					$("#rawTransactionStatus").html('txid: '+$(data).find("txid").text());
+				} else {
+					$("#rawTransactionStatus").addClass('alert-danger').removeClass('alert-success').prepend('<span class="glyphicon glyphicon-exclamation-sign"></span> ');
+				}
+			},
+			complete: function(data, status) {
+				$("#rawTransactionStatus").fadeOut().fadeIn();
+				$(thisbtn).val('Submit').attr('disabled',false);				
+			}
+		});
+	}
+
 
 	// broadcast transaction via cryptoid
 	function rawSubmitcryptoid_Carboncoin(thisbtn) {
@@ -1726,6 +1787,10 @@ $(document).ready(function() {
 		} else if(host=="cryptoid.info_carboncoin"){
 			$("#rawSubmitBtn").click(function(){
 				rawSubmitcryptoid_Carboncoin(this);
+			});
+		} else if(host=="bitcoingold.testnet"){
+			$("#rawSubmitBtn").click(function(){
+				rawSubmitBitcoingold_testnet(this);
 			});
 		} else {
 			$("#rawSubmitBtn").click(function(){
