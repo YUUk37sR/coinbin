@@ -885,7 +885,7 @@
 		r.listUnspent = function(address, callback) {
 			coinjs.ajax(coinjs.host+'/addrs/'+address+'/utxo', callback, "GET");
 		}
-
+		
 		/* add unspent to transaction */
 		r.addUnspent = function(address, callback, script, segwit){
 			var self = this;
