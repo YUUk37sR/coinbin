@@ -4,6 +4,7 @@ $(document).ready(function() {
 
 	var explorer_tx = "https://explorer.bitcoingold.org/insight/tx/"
 	var explorer_addr = "https://explorer.bitcoingold.org/insight/address/"
+	var test_explorer_addr = "https://test-explorer.bitcoingold.org/insight/address/"
 	var explorer_block = "https://explorer.bitcoingold.org/insight/block/"
 
 	var wallet_timer = false;
@@ -934,35 +935,26 @@ $(document).ready(function() {
 
 	/* retrieve unspent data from testnet for bitcoingold */
 	function listUnspentBitcoingold_testnet(redeem){
-		$.ajax ({
-			type: "GET",
-			url: "https://test-explorer.bitcoingold.org/insight-api/addrs/"+redeem.addr+"/utxo",
-			dataType: "json",
-			error: function(data) {
-				$("#redeemFromStatus").removeClass('hidden').html('<span class="glyphicon glyphicon-exclamation-sign"></span> Unexpected error, unable to retrieve unspent outputs!');
-			},
-			success: function(data) {
-				if((data.status && data.data) && data.status=='success'){
-					$("#redeemFromAddress").removeClass('hidden').html('<span class="glyphicon glyphicon-info-sign"></span> Retrieved unspent inputs from address <a href="'+explorer_addr+redeem.addr+'" target="_blank">'+redeem.addr+'</a>');
-					var dataJson = JSON.parse(data);
-					dataJson.map(function(key){
-						var tx = key.txid;
-						var n  = key.vout; 
-						var script = key.scriptPubKey;
-						var amount = key.amount;
-						addOutput(tx, n, script, amount);
-					});
-				} else {
-					$("#redeemFromStatus").removeClass('hidden').html('<span class="glyphicon glyphicon-exclamation-sign"></span> Unexpected error, unable to retrieve unspent outputs.');
-				}
-			},
-			complete: function(data, status) {
-				$("#redeemFromBtn").html("Load").attr('disabled',false);
-				totalInputAmount();
-			}
-		});
-	}
+		coinjs.ajax("https://test-explorer.bitcoingold.org/insight-api/addrs/"+redeem.addr+"/utxo",function(data){
+			if(redeem.addr) {
+				$("#redeemFromAddress").removeClass('hidden').html('<span class="glyphicon glyphicon-info-sign"></span> Retrieved unspent inputs from address <a href="'+test_explorer_addr+redeem.addr+'" target="_blank">'+redeem.addr+'</a>');
 
+				var dataJson = JSON.parse(data);
+				dataJson.map(function(key){
+					var tx = key.txid;
+					var n  = key.vout; 
+					var script = key.scriptPubKey;
+					var amount = key.amount;
+					addOutput(tx, n, script, amount);
+				});
+
+			}
+
+			$("#redeemFromBtn").html("Load").attr('disabled',false);
+			totalInputAmount();
+
+		},"GET");	
+	}
 
 	/* retrieve unspent data from chainso for litecoin */
 	function listUnspentChainso_Litecoin(redeem){
@@ -1136,12 +1128,11 @@ $(document).ready(function() {
 				$("#rawTransactionStatus").addClass('alert-danger').removeClass('alert-success').removeClass("hidden").html(" There was an error submitting your request, please try again").prepend('<span class="glyphicon glyphicon-exclamation-sign"></span>');
 			},
 			success: function(data) {
-				$("#rawTransactionStatus").html(unescape($(data).find("response").text()).replace(/\+/g,' ')).removeClass('hidden');
-				if($(data).find("result").text()==1){
+				if(data.txid){
 					$("#rawTransactionStatus").addClass('alert-success').removeClass('alert-danger');
-					$("#rawTransactionStatus").html('txid: '+$(data).find("txid").text());
+					$("#rawTransactionStatus").html('txid: '+ data.txid);
 				} else {
-					$("#rawTransactionStatus").addClass('alert-danger').removeClass('alert-success').prepend('<span class="glyphicon glyphicon-exclamation-sign"></span> ');
+					$("#rawTransactionStatus").addClass('alert-danger').removeClass('alert-success').html(data).prepend('<span class="glyphicon glyphicon-exclamation-sign"></span> ');
 				}
 			},
 			complete: function(data, status) {
@@ -1163,12 +1154,11 @@ $(document).ready(function() {
 				$("#rawTransactionStatus").addClass('alert-danger').removeClass('alert-success').removeClass("hidden").html(" There was an error submitting your request, please try again").prepend('<span class="glyphicon glyphicon-exclamation-sign"></span>');
 			},
 			success: function(data) {
-				$("#rawTransactionStatus").html(unescape($(data).find("response").text()).replace(/\+/g,' ')).removeClass('hidden');
-				if($(data).find("result").text()==1){
+				if(data.txid) {
 					$("#rawTransactionStatus").addClass('alert-success').removeClass('alert-danger');
-					$("#rawTransactionStatus").html('txid: '+$(data).find("txid").text());
+					$("#rawTransactionStatus").html('txid: ' + data.txid).removeClass('hidden');
 				} else {
-					$("#rawTransactionStatus").addClass('alert-danger').removeClass('alert-success').prepend('<span class="glyphicon glyphicon-exclamation-sign"></span> ');
+					$("#rawTransactionStatus").addClass('alert-danger').removeClass('alert-success').html(data).prepend('<span class="glyphicon glyphicon-exclamation-sign"></span> ');
 				}
 			},
 			complete: function(data, status) {
