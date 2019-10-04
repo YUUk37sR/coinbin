@@ -5,8 +5,6 @@ A Open Source Browser Based Bitcoin Gold Wallet.
 
 Github URL: https://github.com/kherwa/coinbin/
 
-Live Version: https://kherwa.github.io/coinbin
-
 Coinb.in supports a number of key features such as: 
 
 - Offline Compressed & uncompressed Address creation.
